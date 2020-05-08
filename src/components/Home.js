@@ -18,16 +18,24 @@ const Home = () => {
     setWeather(weather => ({ ...weather, [event.target.name]: event.target.value }))
   }
 
+  const [result, setResult] = useState({
+    main: {
+      temp: '',
+      humidity: '',
+      feels_like: ''
+    },
+    name: ''
+  })
+
   const handleSubmit = event => {
+    const api = {
+      url: "https://api.openweathermap.org/data/2.5/",
+      key: "1a1715229f610f4b01ce2654fbf4a6f7"
+    }
     event.preventDefault()
-    console.log(weather.country)
-    console.log(weather)
-    axios.get(`api.openweathermap.org/data/2.5/weather?q=${weather.city},${weather.country}&appid=1a1715229f610f4b01ce2654fbf4a6f7`,)
-      .then(response => {
-        const apiResponse = response.data;
-        console.log(apiResponse)
-        // console.log(`Current temperature in ${apiResponse.location.name} is ${apiResponse.current.temperature}`);
-      }).catch(error => {
+    axios.get(`${api.url}weather?q=${weather.city},${weather.country}&units=metric&APPID=${api.key}`)
+      .then(res => setResult( res.data ))
+      .catch(error => {
         console.log(error);
       }, [])
   }
@@ -52,12 +60,15 @@ const Home = () => {
 
   const resultStyle = {
     backgroundColor: 'transparent',
-    color: 'black'
+    color: 'white',
+    border: '0',
+    textAlign: 'left'
   }
   return (
     <div>
-    <h1 style={h1Style}> Weather App </h1>
+
     <Container>
+    <h1 style={h1Style}> Weather App </h1>
     <Row style={homeStyle}>
         <Col xs={6} md={4}>
           <Image src="./eee.jpeg" style={{borderRadius: '20rem'}} fluid/>
@@ -103,11 +114,11 @@ const Home = () => {
           </Form>
         </div>
       </div>
-      <ListGroup style={resultStyle}>
-        <ListGroup.Item>Location:______</ListGroup.Item>
-        <ListGroup.Item>Temperature:______</ListGroup.Item>
-        <ListGroup.Item>Humidity:______</ListGroup.Item>
-        <ListGroup.Item>Conditions:______</ListGroup.Item>
+      <ListGroup>
+        <ListGroup.Item style={resultStyle}>Location: {result.name} </ListGroup.Item>
+        <ListGroup.Item style={resultStyle}>Temperature: {result.main.temp} °C</ListGroup.Item>
+        <ListGroup.Item style={resultStyle}>Humidity: {result.main.humidity}</ListGroup.Item>
+        <ListGroup.Item style={resultStyle}>Feels like:{result.main.feels_like} °C</ListGroup.Item>
       </ListGroup>
     </Row>
     </Container>

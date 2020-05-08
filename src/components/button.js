@@ -18,7 +18,7 @@ const Button = styled.button`
   &:hover {
     background-color: transparent ;
     border-color: rgba(1,101,156,1);
-    color: gray;
+    color: yellow;
     transition: color .7s linear, background-color .7s linear;
   }
 `
